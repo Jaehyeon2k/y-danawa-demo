@@ -1,0 +1,43 @@
+# .dockerignore
+# Docker 빌드 시 제외할 파일 및 디렉토리
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# Build artifacts (build/libs는 제외하지 않음)
+target/
+dist/
+node_modules/
+
+# Gradle
+.gradle/
+gradle/
+
+# Test
+src/test/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Documentation
+*.md
+docs/
+
+# Frontend specific (for backend Dockerfile)
+frontend/
+
