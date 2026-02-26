@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(JAVA_HOME=\"C:/Users/ASUS/.jdks/ms-21.0.9\" cd \"C:/yjudanawa-damo/com\")",
-      "Bash(JAVA_HOME=\"C:/Users/ASUS/.jdks/ms-21.0.9\" ./gradlew test:*)"
-    ]
-  }
-}
