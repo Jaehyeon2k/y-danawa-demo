@@ -1,0 +1,77 @@
+HELP.md
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Secrets / Local Env ###
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+### Python ###
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+*.egg
+
+### Node ###
+node_modules/
+npm-debug.log
+yarn-error.log
+frontend/node_modules/
+
+### Logs ###
+*.log
+logs/
+backend-error.log
+com/backend-error.log
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Build & Runtime artifacts ###
+target/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
