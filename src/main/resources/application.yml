@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: com
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/ydanawa_db}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:0910}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+
+app:
+  api-key: ${APP_API_KEY:}
+  grpc:
+    host: ${APP_GRPC_HOST:localhost}
+    port: ${APP_GRPC_PORT:9090}
+  images:
+    directory: ${CRAWLER_OUT:c:/yjudanawa-damo/com/image-crawler}
+  external:
+    kakao-rest-api-key: ${KAKAO_REST_API_KEY:}
+    google-api-key: ${GOOGLE_API_KEY:}
+    aladin-ttb-key: ${ALADIN_TTB_KEY:}
+  placeholder-image-url: ${PLACEHOLDER_IMAGE_URL:https://placehold.co/120x174?text=%EC%9D%B4%EB%AF%B8%EC%A7%80+%EC%97%86%EC%9D%8C}
+  jwt:
+    secret: ${APP_JWT_SECRET:dev-secret-key-change-me-32bytes!!}
+    expiration-minutes: ${APP_JWT_EXP_MINUTES:60}
+
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8

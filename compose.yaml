@@ -1,0 +1,122 @@
+﻿services:
+  db:
+    image: 'pgvector/pgvector:pg16'
+    container_name: ydanawa-db
+    environment:
+      - 'POSTGRES_DB=ydanawa_db'
+      - 'POSTGRES_PASSWORD=0910'
+      - 'POSTGRES_USER=root'
+    ports:
+      - '5433:5432'
+    command:
+      - "postgres"
+      - "-c"
+      - "listen_addresses=*"
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d ydanawa_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ydanawa-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ydanawa-backend
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ydanawa_db'
+      - 'SPRING_DATASOURCE_USERNAME=root'
+      - 'SPRING_DATASOURCE_PASSWORD=0910'
+      - 'KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY:-}'
+      - 'GOOGLE_API_KEY=${GOOGLE_API_KEY:-}'
+      - 'PLACEHOLDER_IMAGE_URL=https://placehold.co/120x174?text=%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EC%A4%80%EB%B9%84%20%EC%A4%91'
+      - 'ALADIN_TTB_KEY=${ALADIN_TTB_KEY:-}'
+      - 'APP_GRPC_HOST=ydanawa-library-scraper'
+      - 'APP_GRPC_PORT=9090'
+      - 'CRAWLER_OUT=/app/image-crawler'
+    depends_on:
+      db:
+        condition: service_healthy
+      library-scraper:
+        condition: service_healthy
+    ports:
+      - '8080:8080'
+    dns:
+      - '8.8.8.8'
+      - '1.1.1.1'
+    volumes:
+      - './image-crawler:/app/image-crawler'
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/api/books/search?q=java || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - ydanawa-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ydanawa-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - '80:80'
+    restart: unless-stopped
+    networks:
+      - ydanawa-network
+
+  library-scraper:
+    build:
+      context: ./library-scraper
+      dockerfile: Dockerfile
+    container_name: ydanawa-library-scraper
+    ports:
+      - '8090:8090'
+      - '9090:9090'
+    env_file:
+      - './library-scraper/.env'
+    environment:
+      - 'GRPC_HOST=0.0.0.0'
+      - 'GRPC_PORT=9090'
+      - 'HTTP_HOST=0.0.0.0'
+      - 'HTTP_PORT=8090'
+      - 'SCRAPER_PUBLIC_BASE_URL=${SCRAPER_PUBLIC_BASE_URL:-http://localhost:8090}'
+      - 'KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY:-}'
+      - 'ALADIN_TTB_KEY=${ALADIN_TTB_KEY:-}'
+      - 'GOOGLE_API_KEY=${GOOGLE_API_KEY:-}'
+      - 'PLACEHOLDER_IMAGE_URL=https://placehold.co/120x174?text=%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EC%A4%80%EB%B9%84%20%EC%A4%91'
+      - 'SCRAPER_IMAGE_DIR=/app/image-crawler'
+      - 'EBOOK_BASE_URL=https://ebook.yjc.ac.kr'
+      - 'ALLOWED_EBOOK_HOSTS=ebook.yjc.ac.kr'
+      - 'EBOOK_CACHE_TTL_SEC=900'
+      - 'EBOOK_TOTAL_TIMEOUT_SEC=5'
+      - 'PLAYWRIGHT_HARD_TIMEOUT_MS=5000'
+    volumes:
+      - './image-crawler:/app/image-crawler'
+    restart: unless-stopped
+    networks:
+      - ydanawa-network
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import grpc; channel = grpc.insecure_channel('localhost:9090'); channel.close()" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  pgdata:
+
+
+networks:
+  ydanawa-network:
+    driver: bridge

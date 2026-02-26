@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "y-danawa-frontend": "file:.."
+  }
+}

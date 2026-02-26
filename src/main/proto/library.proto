@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "yju.danawa.com.grpc";
+option java_outer_classname = "LibraryProto";
+
+package library;
+
+service LibraryService {
+  rpc CheckLibrary(LibraryRequest) returns (LibraryResponse);
+  rpc GetLibraryStatus(LibraryRequest) returns (LibraryResponse);
+  rpc GetEbookStatus(EbookRequest) returns (EbookResponse);
+  rpc GetBookInfo(BookInfoRequest) returns (BookInfoResponse);
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+  rpc SearchBooks(BookRequest) returns (BookResponse);
+}
+
+message LibraryRequest {
+  string isbn = 1;
+  string title = 2;
+  string author = 3;
+}
+
+message LibraryResponse {
+  bool found = 1;
+  bool available = 2;
+  string location = 3;
+  string call_number = 4;
+  string detail_url = 5;
+  string error_message = 6;
+  string loan_status_text = 7;
+  bool detail_verified = 8;
+  string checked_at = 9;
+  bool is_owned = 10;
+  string status_text = 11;
+  bool retry_required = 12;
+  string overall_status = 13;
+  string record_type_picked = 14;
+  string matched_title = 15;
+  string debug_reason = 16;
+}
+
+message EbookRequest {
+  string title = 1;
+  string author = 2;
+  string publisher = 3;
+}
+
+message EbookResponse {
+  string title = 1;
+  bool found = 2;
+  int32 total_holdings = 3;
+  int32 available_holdings = 4;
+  string deep_link_url = 5;
+  string status_text = 6;
+  string error_message = 7;
+  string checked_at = 8;
+}
+
+message BookInfoRequest {
+  string isbn13 = 1;
+}
+
+message BookInfoResponse {
+  string isbn13 = 1;
+  string availability_status = 2; // AVAILABLE | UNAVAILABLE
+  string image_url = 3;
+  string image_source = 4; // KAKAO | ALADIN | GOOGLE | PLACEHOLDER
+  string error_message = 5;
+  string checked_at = 6;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string status = 1;
+  string version = 2;
+}
+
+message BookRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message BookItem {
+  string title = 1;
+  string author = 2;
+  string isbn = 3;
+  int32 price = 4;
+  string kakao_thumbnail_url = 5;
+  string image_url = 6;
+  string image_proxy_url = 7;
+  PreciseHoldingStatus holding = 8;
+}
+
+message BookResponse {
+  repeated BookItem books = 1;
+  string error_message = 2;
+}
+
+message PreciseHoldingStatus {
+  bool checked = 1;
+  bool found = 2;
+  bool available = 3;
+  string location = 4;
+  string call_number = 5;
+  string detail_url = 6;
+  string status_text = 7;
+  string verification_source = 8;
+  string checked_at = 9;
+}

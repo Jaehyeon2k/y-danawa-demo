@@ -1,0 +1,10 @@
+﻿# Local runtime secrets
+.env
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+
+# Generated protobuf files
+library_pb2.py
+library_pb2_grpc.py

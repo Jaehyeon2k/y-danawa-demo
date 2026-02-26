@@ -1,0 +1,12 @@
+{
+  "name": "y-danawa",
+  "private": true,
+  "scripts": {
+    "dev:backend": "gradlew.bat bootRun",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently -k -n backend,frontend \"npm:dev:backend\" \"npm:dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
